@@ -103,7 +103,7 @@ func (mc *Connection) Delete(key string) (deleted bool, err error) {
 	mc.writestrings("delete ", key, "\r\n")
 	reply := mc.readline()
 	if strings.Contains(reply, "ERROR") {
-		panic(NewMemcacheError("Server error"))
+		panic(NewMemcacheError("delete command, Server error:" + reply))
 	}
 	return strings.HasPrefix(reply, "DELETED"), nil
 }
@@ -214,7 +214,7 @@ func (mc *Connection) store(command, key string, flags uint16, timeout uint64, v
 	mc.writestring("\r\n")
 	reply := mc.readline()
 	if strings.Contains(reply, "ERROR") {
-		panic(NewMemcacheError("Server error"))
+		panic(NewMemcacheError("store command, Server error: " + reply))
 	}
 	return strings.HasPrefix(reply, "STORED")
 }
@@ -284,4 +284,3 @@ func handleError(err *error) {
 		*err = x.(MemcacheError)
 	}
 }
-
